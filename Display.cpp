@@ -4,6 +4,7 @@
 #include <time.h>
 #include <math.h>
 #include <stdio.h>
+#include <iostream>
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 TTF_Font* gFont = NULL;
@@ -11,38 +12,47 @@ SDL_Color gColor;
 LTexture gTextTexture;
 
 using namespace std;
-void setFont(int v){
+void setFont(int v)
+{
     // Deallocate close previous font
     TTF_CloseFont(gFont);gFont = NULL;
     gFont = TTF_OpenFont("ClearSans-Bold.ttf", v);
 }
 
-void fillRectangle(int x,int y, int width, int height, SDL_Color gColor){
+void fillRectangle(int x,int y, int width, int height, SDL_Color gColor)
+{
     SDL_Rect fillRect = {x,y, width, height};
     // SDL_SetRenderDrawColor(gRenderer,rand()%256, rand()%256, rand() % 256, 0xFF);
     SDL_SetRenderDrawColor(gRenderer,gColor.r, gColor.g, gColor.b, 0xFF);
     SDL_RenderFillRect(gRenderer, &fillRect);
 }
-void fillRectangleBackground(SDL_Rect clip, SDL_Color gColor){
+void fillRectangleBackground(SDL_Rect clip, SDL_Color gColor)
+{
     SDL_SetRenderDrawColor(gRenderer, gColor.r , gColor.g, gColor.b, 0XFF);
     SDL_RenderDrawLine(gRenderer, clip.x, clip.y, clip.x + clip.w, clip.y);
     SDL_RenderDrawLine(gRenderer, clip.x, clip.y + clip.h, clip.x + clip.w, clip.y + clip.h);
     SDL_RenderDrawLine(gRenderer, clip.x, clip.y, clip.x, clip.y + clip.h);
     SDL_RenderDrawLine(gRenderer, clip.x + clip.w, clip.y, clip.x + clip.w, clip.y + clip.h);
 }
-void init(){
+void init()
+{
     SDL_Init(SDL_INIT_EVERYTHING);
     TTF_Init();
     gWindow = SDL_CreateWindow("2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
     // Assign for print
 };
-void loadMedia(){
+void loadMedia()
+{
     gFont = TTF_OpenFont("ClearSans-Bold.ttf", 30);
     SDL_Color gColor = {255, 0, 0};
 }
-void PresentRender(){ SDL_RenderPresent(gRenderer);}
-void close(){
+void PresentRender()
+{
+    SDL_RenderPresent(gRenderer);
+}
+void close()
+{
     SDL_DestroyRenderer(gRenderer); gRenderer = NULL;
     SDL_DestroyWindow( gWindow ); gWindow = NULL;
     TTF_CloseFont(gFont);   gFont = NULL;
@@ -55,28 +65,34 @@ void close(){
 //void DrawShape(){
     // Clear Screen
 //}
-LTexture::LTexture(){
+LTexture::LTexture()
+{
     pTexture = NULL;
     pWidth = 0;
     pHeight = 0;
 }
-LTexture::~LTexture(){
+LTexture::~LTexture()
+{
     free();
 }
-void LTexture::free(){
+void LTexture::free()
+{
     if (pTexture != NULL){
         SDL_DestroyTexture(pTexture); pTexture = NULL;
         pWidth = 0;
         pHeight = 0;
     }
 }
-int LTexture::getWidth(){
+int LTexture::getWidth()
+{
     return pWidth;
 }
-int LTexture::getHeight(){
+int LTexture::getHeight()
+{
     return pHeight;
 }
-void LTexture::setColor(Uint8 red, Uint8 green, Uint8 blue){
+void LTexture::setColor(Uint8 red, Uint8 green, Uint8 blue)
+{
     SDL_SetTextureColorMod(pTexture, red, green, blue);
 }
 /*void LTexture::render(string text,int x,int y){
@@ -109,16 +125,19 @@ void LTexture::render( int x, int y, SDL_Rect* clip, double angle, SDL_Point* ce
 	SDL_RenderCopyEx( gRenderer, pTexture, NULL, &renderQuad, angle, center, flip );
 }
 // Render without caring about the position in desRect.
-void LTexture::normalRender(int x,int y,  SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip ){
+void LTexture::normalRender(int x,int y,  SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
+{
     SDL_Rect renderQuad = {x, y, pWidth, pHeight};
-    if( clip != NULL ){
+    if( clip != NULL )
+    {
 		renderQuad.w = clip->w;
 		renderQuad.h = clip->h;
 	}
 	SDL_RenderCopyEx( gRenderer, pTexture, clip, &renderQuad, angle, center, flip );
 }
 
-bool LTexture::loadText(string text, SDL_Color gColor){
+bool LTexture::loadText(string text, SDL_Color gColor)
+{
     free();
     SDL_Surface* tempSurface = TTF_RenderText_Blended(gFont, text.c_str(), gColor);
     pTexture = SDL_CreateTextureFromSurface(gRenderer, tempSurface);
@@ -126,9 +145,11 @@ bool LTexture::loadText(string text, SDL_Color gColor){
     SDL_FreeSurface(tempSurface);
     return pTexture != NULL;
 }
-string intoString(int score){
+string intoString(int score)
+{
 	string ans;
-	while (score >= 10) {
+	while (score >= 10)
+    {
 		ans = (char)(score%10+'0') + ans;
 		score/=10;
 	}
@@ -142,7 +163,8 @@ string intoString(int score){
 //         int y = yl + (i-1) * squareWidth;
 //     }
 // }
-void display(int score,int highScore, GRID grid[N][N], LButton* newGame,LButton* newMode, LButton* Save, LButton*Load){
+void display(int score,int highScore, GRID grid[N][N], LButton* newGame,LButton* newMode, LButton* Save, LButton*Load)
+{
     //DrawShape();
     // Clear
     SDL_SetRenderDrawColor(gRenderer,255, 255, 255, 255);
@@ -153,18 +175,26 @@ void display(int score,int highScore, GRID grid[N][N], LButton* newGame,LButton*
     // Draw background for the board.
     gColor = {0,0,0};
     // Draw scoreline
-    string text = "Score:" + intoString(score);
+    string text = "Score:";
     gTextTexture.loadText(text, {255,255,255});
-    fillRectangle(123, 0, 201, 50, {187,173,160}); // the Font for scoreline.
-    SDL_Rect clip = {0,0,SCREEN_WIDTH-190,gTextTexture.getHeight()};
-    gTextTexture.render(0,7,&clip);
+    fillRectangle(150, 0, 150, 60, {187,173,160}); // the Font for scoreline.
+    SDL_Rect clip = {150, 0, 150, 30};
+    gTextTexture.render(150,0,&clip);
+    text = intoString(score);
+    gTextTexture.loadText(text, {255,255,255});
+    clip = {150, 30, 150, 30};
+    gTextTexture.render(150,30,&clip);
 
-
-    string _text = "High Score:" + intoString(highScore);
-    gTextTexture.loadText(_text, {255,255,255});
-    fillRectangle(328,0,187,50,{187,173,160});
-    SDL_Rect _clip = {0,0,SCREEN_WIDTH+193,gTextTexture.getHeight()+3};
-    gTextTexture.render(5,7,&_clip);
+    text = "Best:";
+    gTextTexture.loadText(text, {255,255,255});
+    //printf("%d %d\n", gTextTexture.getWidth(), gTextTexture.getHeight());
+    fillRectangle(340,0,150,60,{187,173,160});
+    clip = {340,0,150,30};
+    gTextTexture.render(340,0,&clip);
+    text = intoString(highScore);
+    gTextTexture.loadText(text, WHITE);
+    clip = {340,30,150,30};
+    gTextTexture.render(340,30,&clip);
     // Draw nemGame button
 	newGame->drawButton();
     // Draw newMode button
@@ -173,12 +203,15 @@ void display(int score,int highScore, GRID grid[N][N], LButton* newGame,LButton*
     Save->drawButton();
     //Draw Load button
     Load->drawButton();
-    for(int i=1;i<=4;++i){
-        for(int j=1;j<=4;++j){
+    for(int i=1;i<=4;++i)
+    {
+        for(int j=1;j<=4;++j)
+        {
             int x = xl + (j-1) * squareWidth;
             int y = yl + (i-1) * squareWidth;
             fillRectangle(x + 5, y + 5, squareWidth-10, squareWidth-10, grid[i][j].color);
-            if (grid[i][j].score) {
+            if (grid[i][j].score)
+            {
                 string text = intoString(grid[i][j].score);
                 //gColor = {log2(grid[i][j])*30,log2(grid[i][j])*30,log2(grid[i][j])*30};
                 gTextTexture.loadText(text, getTextColor(grid[i][j]));
@@ -189,7 +222,8 @@ void display(int score,int highScore, GRID grid[N][N], LButton* newGame,LButton*
     //SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
     SDL_RenderPresent(gRenderer);
 }
-void ScreenForLoser(int score){
+void ScreenForLoser(int score)
+{
     //fillRectangle(xl,yl,squareWidth*4,{212,200,189});
     //SDL_RenderClear(gRenderer);
     // SDL_SetRenderDrawColor(gRenderer,rand()%256, rand()%256, rand() % 256, 0xFF);

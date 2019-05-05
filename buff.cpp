@@ -17,8 +17,8 @@ SDL_Texture* gTexture = NULL;
 TTF_Font* gFont = NULL;
 SDL_Color gColor;
 
-SDL_Texture* loadText( string text, TTF_Font* gFont, SDL_Color gColor, SDL_Renderer* gRenderer){
-
+SDL_Texture* loadText( string text, TTF_Font* gFont, SDL_Color gColor, SDL_Renderer* gRenderer)
+{
 	SDL_Surface* tempSurface = TTF_RenderText_Solid( gFont, text.c_str(), gColor);
 
 	SDL_Texture* newTexture = SDL_CreateTextureFromSurface( gRenderer, tempSurface);
@@ -28,16 +28,19 @@ SDL_Texture* loadText( string text, TTF_Font* gFont, SDL_Color gColor, SDL_Rende
 	return newTexture;
 }
 
-void close(){
+void close()
+{
 	SDL_DestroyWindow(gWindow);
 	SDL_DestroyRenderer(gRenderer);
 	TTF_Quit();
 	SDL_Quit();
 }
 
-string intoString(int score){
+string intoString(int score)
+{
 	string ans;
-	while (score >= 10) {
+	while (score >= 10)
+    {
 		ans = (char)(score%10+'0') + ans;
 		score/=10;
 	}
@@ -45,8 +48,8 @@ string intoString(int score){
 	return ans;
 }
 
-int main(){
-
+int main()
+{
 	// init everything
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
@@ -71,10 +74,12 @@ int main(){
 	bool quit = false;
 	SDL_Event e;
 
-	while (!quit){
-		while (SDL_PollEvent(&e)){
-			if (e.type == SDL_KEYDOWN) quit = true;
-		}
+	while (!quit)
+    {
+        while (SDL_PollEvent(&e))
+        {
+            if (e.type == SDL_KEYDOWN) quit = true;
+        }
 		SDL_RenderClear(gRenderer);
 		SDL_SetRenderDrawColor(gRenderer,0xFF, 0, 0, 0xFF);
 		SDL_RenderFillRect(gRenderer, &desRect);

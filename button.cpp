@@ -4,54 +4,65 @@
 #include "main.h"
 #undef main
 
-LButton::LButton(){
+LButton::LButton()
+{
     mPosition.x = 0;
     mPosition.y = 0;
     currentSprite = 1;
     buttonHeight = buttonWidth = 0;
     text = "";
 }
-int LButton::getButtonWidth(){
+int LButton::getButtonWidth()
+{
     return buttonWidth;
 }
 
-int LButton::getButtonHeight(){
+int LButton::getButtonHeight()
+{
     return buttonHeight;
 }
-string LButton::getButtonText(){
+string LButton::getButtonText()
+{
     return text;
 }
 
-void LButton::set(int x,int y){
+void LButton::set(int x,int y)
+{
     buttonWidth = x;
     buttonHeight = y;
 }
 
-SDL_Point LButton::getPosition() {
+SDL_Point LButton::getPosition()
+{
     return mPosition;
 }
 
-void LButton::initButton(int x,int y, string s){
+void LButton::initButton(int x,int y, string s)
+{
     mPosition.x = x;
     mPosition.y = y;
     text = s;
 }
-int LButton::insideButton(int x,int y){
+int LButton::insideButton(int x,int y)
+{
     int xl = mPosition.x, yl = mPosition.y;
     return (x >= xl && x <= xl + buttonWidth && y >= yl && y <= yl + buttonHeight);
 }
 
-void LButton::drawButton(){
+void LButton::drawButton()
+{
     // load text
     LTexture gText;
     SDL_Color textColor, backgroundColor;
-    if (!currentSprite) {
-            textColor = WHITE;
-            backgroundColor = BACKGROUND_BUTTON;
+    if (currentSprite)
+    {
+        textColor = WHITE;
+        backgroundColor = BACKGROUND_BUTTON;
     }
-    else {
-            backgroundColor = WHITE;
-            textColor = BACKGROUND_BUTTON;
+    else
+    {
+        backgroundColor = WHITE;
+        textColor = BACKGROUND_BUTTON;
     }
     setFont(20);
 
@@ -72,14 +83,18 @@ void LButton::drawButton(){
     gText.free();
 }
 // Handle event E
-void LButton::handleEvent(SDL_Event* e,void (*restart)()){
+void LButton::handleEvent(SDL_Event* e,void (*restart)())
+{
     int x,y;
     SDL_GetMouseState(&x, &y);
-        if (e->type == SDL_MOUSEMOTION){
-            if (insideButton(x,y)) { // check if the mouse is inside the button
+        if (e->type == SDL_MOUSEMOTION)
+        {
+            if (insideButton(x,y))
+            { // check if the mouse is inside the button
                 currentSprite = 0; // change button color.
             }
-            else {
+            else
+            {
                 currentSprite = 1; // change back
             }
         }
