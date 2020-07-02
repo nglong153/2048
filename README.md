@@ -1,4 +1,4 @@
-# 2048_TUYEN
+# 2048
 ### EZ GAME
 HOW TO USE:
 - Mở thư mục 2048: nhấp shift + chuột phải --> Nhấn Open Command window here
